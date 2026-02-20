@@ -6,9 +6,12 @@ A universal AI coding skill that teaches any AI assistant (Cursor, Claude Code, 
 
 When the instructions are available to the assistant, it will:
 
+- Detect the project's indentation style (tabs/spaces, width) before touching any files — from `.editorconfig`, `.xcodeproj`, Xcode user defaults, or source file inspection — and refuse to format if a mismatch would silently reformat the whole codebase
 - Use the `swift-format` CLI to format Swift files in-place or run lint checks
 - Respect project configuration (`.swift-format` in the repo)
 - Apply the right flags (`-i`, `-r`, `-p`, `-s`) for formatting vs linting and for CI vs interactive use
+- Format only git-changed files when working in a large existing codebase
+- Run in safe mode with a conservative temporary config to minimise diff noise on first-time formatting
 
 Use it when you want the assistant to "format my Swift code", "fix swift-format lint issues", or keep Swift files consistently formatted while editing.
 
@@ -55,18 +58,31 @@ swift-format-skill/
 │       ├── reference.md
 │       └── examples.md
 └── scripts/
-    └── format-in-place.sh   # Optional wrapper for in-place formatting
+    ├── detect-indentation.sh   # Detects tabs/spaces style for a Swift project
+    └── format-in-place.sh      # Optional wrapper for in-place formatting
 ```
 
-## Optional: format-in-place script
+## Optional scripts
 
-From the repo root you can run:
+### detect-indentation.sh
+
+Detects the indentation style (tabs or spaces, and width) of a Swift project by checking `.editorconfig`, `.xcodeproj/project.pbxproj`, Xcode user defaults, and source files — in that order.
+
+```bash
+./scripts/detect-indentation.sh              # human-readable summary
+./scripts/detect-indentation.sh --swift-format   # prints only the JSON value for .swift-format
+./scripts/detect-indentation.sh [DIR]        # search from a specific directory
+```
+
+### format-in-place.sh
+
+Formats Swift files in-place using swift-format. With no arguments it formats the current directory recursively; with paths it formats those files or directories.
 
 ```bash
 ./scripts/format-in-place.sh [PATH...]
 ```
 
-With no arguments it formats the current directory recursively. With paths it formats those files or directories. Requires `swift-format` on your PATH (or via `xcrun`).
+Both scripts require `swift-format` on your PATH (or available via `xcrun`).
 
 ## License
 

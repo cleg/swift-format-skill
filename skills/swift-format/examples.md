@@ -43,12 +43,14 @@ swift-format lint -r --ignore-unparsable-files .
 
 **Format files changed since last commit (useful in pre-commit hooks):**
 ```bash
-git diff --name-only --diff-filter=ACM HEAD | grep '\.swift$' | xargs swift-format format -i
+swift_files=$(git diff --name-only --diff-filter=ACM HEAD | grep '\.swift$' || true)
+[ -n "$swift_files" ] && echo "$swift_files" | xargs swift-format format -i
 ```
 
 **Format only staged files:**
 ```bash
-git diff --cached --name-only --diff-filter=ACM | grep '\.swift$' | xargs swift-format format -i
+swift_files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.swift$' || true)
+[ -n "$swift_files" ] && echo "$swift_files" | xargs swift-format format -i
 ```
 
 ## Configuration
