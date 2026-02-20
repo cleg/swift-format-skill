@@ -21,15 +21,15 @@ Use it when you want the assistant to "format my Swift code", "fix swift-format 
 cp -r skills/swift-format ~/.cursor/skills/swift-format
 ```
 
-**Option B — Project skill:**  
+**Option B — Project skill:**
 Copy the `skills/swift-format` folder into your project at `.cursor/skills/swift-format`.
 
 ### Claude Code (and other AI coding tools)
 
 Make the skill instructions available to Claude Code so it knows how to run swift-format:
 
-- **Project docs:** Add `skills/swift-format/` (or a copy) to your repo and point Claude at it (e.g. in project context or docs).
-- **Rules / system prompt:** Paste or reference the contents of [SKILL.md](skills/swift-format/SKILL.md) into your project’s custom instructions, rules file (e.g. `.claude/rules` or project-specific rules), or system prompt so Claude Code follows the same format/lint workflow.
+- **CLAUDE.md:** Paste or reference the contents of [SKILL.md](skills/swift-format/SKILL.md) into your project’s `CLAUDE.md` (or `.claude/CLAUDE.md`). Claude Code reads this file automatically on every session, so the formatting workflow is always active.
+- **Project docs:** Add `skills/swift-format/` (or a copy) to your repo so Claude can read it on demand (e.g. `@skills/swift-format/SKILL.md`).
 - **One-shot:** You can say: “Use swift-format to format Swift files; run `swift-format format -i -r .` from the project root, or use the instructions in `skills/swift-format/SKILL.md`.”
 
 The instructions in `SKILL.md` are written to be agent-agnostic: any assistant with terminal access can follow them.

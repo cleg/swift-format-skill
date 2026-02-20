@@ -4,7 +4,7 @@
 #   No paths: format current directory recursively.
 #   With paths: format those files or directories (directories processed recursively).
 
-set -e
+set -euo pipefail
 
 SWIFT_FORMAT=
 if command -v xcrun &>/dev/null; then
@@ -12,6 +12,12 @@ if command -v xcrun &>/dev/null; then
 fi
 if [[ -z "$SWIFT_FORMAT" ]]; then
   SWIFT_FORMAT=$(command -v swift-format 2>/dev/null || true)
+fi
+if [[ -z "$SWIFT_FORMAT" ]]; then
+  # Fall back to `swift format` subcommand (Swift 6+ / Xcode 16+)
+  if command -v swift &>/dev/null && swift format --help &>/dev/null 2>&1; then
+    SWIFT_FORMAT=$(command -v swift)
+  fi
 fi
 if [[ -z "$SWIFT_FORMAT" ]]; then
   echo "error: swift-format not found. Install via Xcode (Swift 6+), Homebrew (brew install swift-format), or build from source." >&2
@@ -22,5 +28,5 @@ if [[ $# -eq 0 ]]; then
   exec "$SWIFT_FORMAT" format -i -r -p .
 fi
 
-# With paths: allow directories (use -r so dirs are processed recursively)
+# With paths: -r processes directories recursively; for .swift file paths it is a no-op.
 exec "$SWIFT_FORMAT" format -i -r -p "$@"

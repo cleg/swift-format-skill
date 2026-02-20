@@ -18,10 +18,11 @@ Apply these instructions when:
 
 ## Prerequisites
 
-Discover the `swift-format` binary before running it:
+Discover the `swift-format` binary before running it, in this order:
 
-1. **Toolchain (preferred):** `xcrun --find swift-format` or use `swift format` (Swift 6+ / Xcode 16).
-2. **Fallback:** `which swift-format` (e.g. Homebrew: `brew install swift-format`).
+1. **Toolchain (preferred):** `xcrun --find swift-format` (returns path to standalone binary).
+2. **PATH fallback:** `which swift-format` (e.g. Homebrew: `brew install swift-format`).
+3. **Swift subcommand (Swift 6+ / Xcode 16+):** `swift format` — invoke as `swift format -i …` instead of `swift-format format -i …`.
 
 If not found, inform the user how to install (toolchain, Homebrew, or build from [swift-format](https://github.com/swiftlang/swift-format)).
 
@@ -39,6 +40,8 @@ swift-format format -i [FILES...]
 - **Custom config:** `--configuration /path/to/.swift-format` (only when overriding project config)
 
 **Important:** `-i`/`--in-place` overwrites files without backup. Use only when the user or context expects in-place fixes.
+
+After formatting, confirm success to the user and note any files that failed to parse.
 
 ## Lint Only
 
